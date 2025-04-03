@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2D Football Game</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
+</head>
+<body>
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: '#008000',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        let player;
+        let ball;
+        let cursors;
+        let spaceKey;
+        let ballMoving = false;
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image('player', 'https://via.placeholder.com/20/0000FF');
+            this.load.image('ball', 'https://via.placeholder.com/15/FFFF00');
+        }
+
+        function create() {
+            player = this.physics.add.sprite(100, 300, 'player').setOrigin(0.5);
+            ball = this.physics.add.sprite(150, 300, 'ball').setOrigin(0.5);
+            cursors = this.input.keyboard.createCursorKeys();
+            spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        }
+
+        function update() {
+            player.setVelocity(0);
+
+            if (cursors.up.isDown) {
+                player.setVelocityY(-200);
+            } else if (cursors.down.isDown) {
+                player.setVelocityY(200);
+            }
+
+            if (Phaser.Input.Keyboard.JustDown(spaceKey) && !ballMoving) {
+                ball.setVelocityX(400);
+                ballMoving = true;
+            }
+
+            if (ball.x > 800) {
+                ball.setPosition(150, player.y);
+                ball.setVelocity(0);
+                ballMoving = false;
+            }
+        }
+    </script>
+</body>
+</html>
